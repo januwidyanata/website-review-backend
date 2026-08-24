@@ -3,11 +3,44 @@
 
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
-generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
-}
-
 datasource db {
   provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum PostType {
+  news
+  review
+  tutorial
+}
+
+model Category {
+  id   String    @id @default(uuid())
+  name String
+  slug String @unique
+}
+
+model Post {
+  id             String    @id @default(uuid())
+  title          String
+  slug           String   @unique
+  excerpt        String?
+  content        String
+  featuredImage  String?  @map("featured_image")
+  type           PostType @default(review)
+  categorySlug   String?  @map("category_slug")
+  
+  // Field khusus Review Produk
+  productName    String?  @map("product_name")
+  specs          Json?    // Menyimpan data spesifikasi dalam format JSON
+  pros           String[] // Array teks untuk keunggulan
+  cons           String[] // Array teks untuk kekurangan
+  affiliateLink  String?  @map("affiliate_link")
+
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  @@map("posts")
 }
