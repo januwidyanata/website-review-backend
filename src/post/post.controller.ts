@@ -20,7 +20,13 @@ export class PostsController {
   }
 
   @Post()
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.create(createPostDto);
+  async create(@Body() createPostDto: CreatePostDto) {
+    //return this.postsService.create(createPostDto);
+    const data_post = await this.postsService.create(createPostDto);
+    return {
+      statusCode: 201,
+      message: "ok",
+      data: data_post
+    }
   }
 }
